@@ -5,7 +5,13 @@ import  {
     FETCH_NEWS_FAILURE
     ,GENERAL_NEWS_REQUEST,
     GENERAL_NEWS_SUCCESS,
-    GENERAL_NEWS_FAILURE
+    GENERAL_NEWS_FAILURE,
+    USER_REGISTER_REQUEST,
+    USER_REGISTER_SUCCESS,
+    USER_REGISTER_FAILURE,
+    USER_LOGIN_REQUEST,
+    USER_LOGIN_SUCCESS,
+    USER_LOGIN_FAILURE
 }
 from  './constants'
 
@@ -65,3 +71,67 @@ export const  generalNews  = (state =  {generalNews:[]} , action) => {
     
         }
 }
+
+export const  userRegister  = (state =  {user:[]} , action) => {
+            
+        switch (action.type) {
+            case USER_REGISTER_REQUEST:
+                return {
+                    ...state,
+                    loading: true
+                }
+            case USER_REGISTER_SUCCESS:
+                return {
+                    ...state,
+                    loading: false,
+                    error: ''
+                }
+            case USER_LOGIN_SUCCESS:
+                return {
+                    ...state,
+                    loading: false,
+                    user: action.payload,
+                    error: ''
+                }
+            case USER_REGISTER_FAILURE:
+                return {
+                    ...state,
+                    loading: false,
+                    user: [],
+                    error: action.payload
+                }
+            default:
+                return state
+    
+        }
+}
+
+
+export const  userLogin  = (state =  {user:[]} , action) => {
+                    
+            switch (action.type) {
+                case USER_LOGIN_REQUEST:
+                    return {
+                        ...state,
+                        loading: true
+                    }
+                case USER_LOGIN_SUCCESS:
+                    return {
+                        ...state,
+                        loading: false,
+                        user: action.payload,
+                        error: ''
+                    }
+                case USER_LOGIN_FAILURE:
+                    return {
+                        ...state,
+                        loading: false,
+                        user: [],
+                        error: action.payload
+                    }
+                default:
+                    return state
+        
+            }
+    }   
+    

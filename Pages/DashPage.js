@@ -16,6 +16,7 @@ import {
   Box,
   Spacer,
   Badge,
+  Skeleton,
 } from "native-base";
 import TopNewsCard from "../Components/TopNewsCard";
 import Categories from "../Components/Categories";
@@ -24,7 +25,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { fetchNews, generalNews } from "../redux/action";
 import LoadingTopCard from "../Components/LoadingTopCard";
-
+import { StatusBar } from "expo-status-bar";
 
 const DashPage = ({ navigation }) => {
   const array = [1, 2, 3, 4, 5];
@@ -49,6 +50,7 @@ const DashPage = ({ navigation }) => {
 
   return (
     <SafeAreaView>
+      
       <ScrollView padding={5}>
         <View>
           <Text fontSize="xl" fontWeight="bold" marginTop={5} marginLeft={5}>
@@ -61,7 +63,12 @@ const DashPage = ({ navigation }) => {
             marginLeft={5}
           >
             <Row>
-              {loading && <LoadingTopCard width={width} />}
+              {loading && (
+                <ScrollView horizontal={true}>
+                  <LoadingTopCard width={width} />
+                  <LoadingTopCard width={width} />
+                </ScrollView>
+              )}
 
               {!loading &&
                 data?.news?.map((news) => {
@@ -70,7 +77,7 @@ const DashPage = ({ navigation }) => {
                       data={news}
                       width={width}
                       onCardPress={goToNews}
-                        key={news.url}
+                      key={news.url}
                     />
                   );
                 })}
@@ -81,8 +88,27 @@ const DashPage = ({ navigation }) => {
 
         <View>
           <ScrollView>
+            {normalLoading &&
+              array.map((item) => {
+                return (
+                  <Row
+                    key={item + 4}
+                    width={width}
+                    marginTop={4}
+                    backgroundColor={"warmGray.100"}
+                    flex={1}
+                    padding={2}
+                    rounded={10}
+                  >
+                    <Skeleton height={100} />
+                  </Row>
+                );
+              })}
+
             {normalData?.generalNews?.map((news) => {
-              return <NewsListItem openNews={goToNews} news={news} key={news.url}/>;
+              return (
+                <NewsListItem openNews={goToNews} news={news} key={news.url} />
+              );
             })}
           </ScrollView>
         </View>

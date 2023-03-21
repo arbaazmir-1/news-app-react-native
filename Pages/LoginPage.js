@@ -6,27 +6,70 @@ import welcome from '../assets/lottie/welcome.json'
 import { useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
+import { userLogin } from '../redux/action';
+import { db ,auth} from '../firebase';
+import {useSelector,useDispatch} from 'react-redux';
+import { useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+
+
+
+
 
 const LoginPage = ({ navigation }) => {
-    const [loading, setLoading] = useState(false);
+    
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    
+    const [error, setError] = useState('null');
+
 
   const animation = useRef(null);
+  const {user} = useSelector(state => state.user);
+  console.log(user);
+  const {loading} = useSelector(state => state.user);
+  console.log(loading);
+
+  const dispatch = useDispatch();
+  
 
   const goToHome = () => {
-    // setLoading(true);
-    // //after 5 seconds, set loading to false
-    // setTimeout(() => {
-    //     setLoading(false);
-    //     navigation.navigate('Home')
-    //     }
-    //     , 5000);
-
-        navigation.navigate('Home')
+    if(email === '' || password === ''){
+        alert('Please fill all the fields');
+    }
+    else{
+        
+        dispatch(userLogin(email,password));
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                navigation.replace('Home');
+                
+            }
+        }
+        );
+    }
     
-    
+  };
 
 
-  }
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      
+      if (user) {
+
+        navigation.replace('Home');
+      } else {
+
+        navigation.canGoBack() && navigation.popToTop();
+        
+      }
+    });
+    return () => {
+      unsubscribe();
+    };
+  },[]);
+
+  
 
   const goToRegister = () => {
     navigation.navigate('Register')
@@ -78,12 +121,17 @@ const LoginPage = ({ navigation }) => {
             size={inputSize} // Use the input size determined based on the screen width
             _light={{ placeholderTextColor: 'blueGray.400' }}
             _dark={{ placeholderTextColor: 'blueGray.50' }}
+            onChangeText={(text) => setEmail(text)}
+            value={email}
+            autoCapitalize='none'
           />
           <Input placeholder="Password"
             size={inputSize} // Use the input size determined based on the screen width
             _light={{ placeholderTextColor: 'blueGray.400' }}
             _dark={{ placeholderTextColor: 'blueGray.50' }}
             secureTextEntry
+            onChangeText={(text) => setPassword(text)}
+            value={password}
 
           />
           <Button colorScheme="blue" _text={{ color: 'white' }} onPress={goToHome}

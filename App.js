@@ -10,16 +10,24 @@ import HomePage from './Pages/HomePage';
 import NewsPage from './Pages/NewsPage';
 import { Provider } from 'react-redux';
 import store from './redux/store';
+import SplashScreen from './Pages/SplashScreen';
 
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
-    
+    <Provider store={store}>
     <NavigationContainer>
       <NativeBaseProvider>
+      
       <Stack.Navigator>
+        <Stack.Screen
+        options={{headerShown: false}}
+        name="Splash"
+        component={SplashScreen} />
+        
+
         <Stack.Screen 
         options={{headerShown: false}}
         name="Login"
@@ -48,6 +56,7 @@ export default function App() {
       
       </NativeBaseProvider>
     </NavigationContainer>
+    </Provider>
     
 
     

@@ -1,6 +1,7 @@
 import { StyleSheet, View, SafeAreaView, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { StatusBar } from "expo-status-bar";
 
 import {
   Flex,
@@ -19,13 +20,30 @@ import SavedNews from "./SavedNews";
 import { Provider } from "react-redux";
 import store from "../redux/store";
 const Tab = createBottomTabNavigator();
+import { auth } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { useEffect } from "react";
 
 const HomePage = ({ navigation }) => {
 
     
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          //do nothing
+        } else {
+            navigation.replace("Login")
+          // ...
+        }
+      });
+    return unsubscribe;
+  }, []);
+  
+
   return (
     <Provider store={store}>
+      <StatusBar style="auto" />
     <Tab.Navigator>
     <Tab.Screen
         name="Dashboard"
